@@ -7,27 +7,25 @@ import csv
 
 app = Flask(__name__)
 
-def scrape_stock_data():
+def scrape_stock_data(url):
     try:
         with sync_playwright() as p:
             browser = p.chromium.launch(headless=True)
             page = browser.new_page()
             
-            # Increase timeout for page.goto to 90 seconds (90000 ms)
-            page.goto("https://portal.tradebrains.in/index/MIDCAP50/heatmap", timeout=90000)
+            try:
+                page.goto(url, timeout=90000)
 
-            # Increase timeout for selector to 60 seconds (60000 ms)
-            page.wait_for_selector("a[target='_self']", timeout=60000)  # Timeout in milliseconds
-            time.sleep(10)  # Additional wait time for dynamic content
-            
-            # Fetch the page content
-            html = page.content()
-            browser.close()
+                page.wait_for_selector("a[target='_self']", timeout=60000)
 
-        # Parse the HTML content using BeautifulSoup
+                page.wait_for_load_state("networkidle", timeout=60000)
+                
+                html = page.content()
+            finally:
+                browser.close()
+
         soup = BeautifulSoup(html, "html.parser")
         
-        # Extract stock data
         stock_data = []
         for card in soup.select("a[target='_self']"):
             try:
@@ -43,17 +41,17 @@ def scrape_stock_data():
                     card.select_one("p.mb-0.fs-14-12.ff-lato.text-white").text
                     .strip()
                     .replace("₹", "")
+                    .replace(",", "")
                     .strip()
                 )
 
-                # Append the stock data
                 stock_data.append({
                     "name": symbol,
-                    "price": float(price.replace(",", "")),  # Ensure price is a float
-                    "change": float(change_percentage)       # Ensure change is a float
+                    "price": float(price),
+                    "change": float(change_percentage)
                 })
             except (AttributeError, ValueError) as e:
-                print(f"Error parsing stock card: {e}")  # Debugging output
+                print(f"Error parsing stock card: {e}")
                 continue
 
         return stock_data
@@ -62,32 +60,73 @@ def scrape_stock_data():
         print(f"Error during scraping: {e}")
         raise
 
-@app.route('/')
-def index():
-    return redirect(url_for('get_stocks_csv'))
-
-@app.route('/api/MIDCAP50', methods=['GET'])
-def get_stocks_csv():
+def generate_csv_response(stock_data, filename):
     try:
-        # Scrape the stock data
-        stock_data = scrape_stock_data()
-
-        # Create an in-memory CSV file
         output = io.StringIO()
         writer = csv.writer(output)
-        # Write the header
         writer.writerow(['name', 'price', 'change'])
-        # Write the data rows
         for stock in stock_data:
             writer.writerow([stock['name'], stock['price'], stock['change']])
 
-        # Return the CSV as a response
         response = Response(output.getvalue(), mimetype='text/csv')
-        response.headers["Content-Disposition"] = "attachment; filename=stock_data.csv"
+        response.headers["Content-Disposition"] = f"attachment; filename={filename}"
         return response
 
     except Exception as e:
         return Response(f"Error: {str(e)}", status=500, mimetype='text/plain')
 
+@app.route('/')
+def index():
+    return redirect(url_for('get_stocks_csv_nifty'))
+
+@app.route('/api/MIDCAP50', methods=['GET'])
+def get_stocks_csv_midcap():
+    try:
+        stock_data = scrape_stock_data("https://portal.tradebrains.in/index/MIDCAP50/heatmap")
+        return generate_csv_response(stock_data, "midcap50_stock_data.csv")
+    except Exception as e:
+        return Response(f"Error: {str(e)}", status=500, mimetype='text/plain')
+
+@app.route('/api/NIFTY', methods=['GET'])
+def get_stocks_csv_nifty():
+    try:
+        stock_data = scrape_stock_data("https://portal.tradebrains.in/index/NIFTY/heatmap")
+        return generate_csv_response(stock_data, "nifty_stock_data.csv")
+    except Exception as e:
+        return Response(f"Error: {str(e)}", status=500, mimetype='text/plain')
+    
+@app.route('/api/NIFTYNEXT50', methods=['GET'])
+def get_stocks_csv_nifty_next50():
+    try:
+        stock_data = scrape_stock_data("https://portal.tradebrains.in/index/NIFTYJR/heatmap")
+        return generate_csv_response(stock_data, "nifty_next50_stock_data.csv")
+    except Exception as e:
+        return Response(f"Error: {str(e)}", status=500, mimetype='text/plain')
+    
+@app.route('/api/NIFTYBANK', methods=['GET'])
+def get_stocks_csv_nifty_bank():
+    try:
+        stock_data = scrape_stock_data("https://portal.tradebrains.in/index/BANKNIFTY/heatmap")
+        return generate_csv_response(stock_data, "nifty_bank_stock_data.csv")
+    except Exception as e:
+        return Response(f"Error: {str(e)}", status=500, mimetype='text/plain')
+    
+@app.route('/api/NIFTYFINANCE', methods=['GET'])
+def get_stocks_csv_nifty_finance():
+    try:
+        stock_data = scrape_stock_data("https://portal.tradebrains.in/index/NIFTYFINANCE/heatmap")
+        return generate_csv_response(stock_data, "nifty_finance_stock_data.csv")
+    except Exception as e:
+        return Response(f"Error: {str(e)}", status=500, mimetype='text/plain')
+    
+@app.route('/api/NIFTYIT', methods=['GET'])
+def get_stocks_csv_nifty_it():
+    try:
+        stock_data = scrape_stock_data("https://portal.tradebrains.in/index/NIFTYIT/heatmap")
+        return generate_csv_response(stock_data, "nifty_it_stock_data.csv")
+    except Exception as e:
+        return Response(f"Error: {str(e)}", status=500, mimetype='text/plain')
+    
+
 if __name__ == '__main__':
-    app.run(debug=True, host="0.0.0.0", port=5000)
+    app.run(debug=False, host="0.0.0.0", port=5000)
