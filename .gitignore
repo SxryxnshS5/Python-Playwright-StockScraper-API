@@ -1,0 +1,97 @@
+# Byte-compiled / optimized / DLL files
+__pycache__/
+*.py[cod]
+*$py.class
+
+# C extensions
+*.so
+
+# Distribution / packaging
+.Python
+env/
+venv/
+ENV/
+build/
+develop-eggs/
+dist/
+downloads/
+eggs/
+.eggs/
+lib/
+lib64/
+parts/
+sdist/
+var/
+wheels/
+share/python-wheels/
+*.egg-info/
+.installed.cfg
+*.egg
+MANIFEST
+
+# Flask and Python environment files
+instance/
+*.env
+*.flaskenv
+
+# Pytest / Coverage
+htmlcov/
+.tox/
+.nox/
+.coverage
+.coverage.*
+.cache
+nosetests.xml
+coverage.xml
+*.cover
+*.py,cover
+.hypothesis/
+.pytest_cache/
+
+# Jupyter Notebook checkpoints
+.ipynb_checkpoints
+
+# IDEs / Text editor settings
+.vscode/
+*.swp
+*~
+.idea/
+*.sublime-project
+*.sublime-workspace
+
+# Logs and temporary files
+*.log
+*.bak
+*.tmp
+*.pid
+*.seed
+*.backup
+
+# Database files
+*.sqlite3
+
+# Docker and other deployment
+docker-compose.override.yml
+*.dockerignore
+
+# Static files and compiled assets
+static/
+*.css.map
+*.js.map
+
+# Local testing
+.env.local
+.env.test
+.env.production
+
+# MacOS files
+.DS_Store
+
+# Windows files
+Thumbs.db
+ehthumbs.db
+Desktop.ini
+
+# Other
+*.pem
+*.key
