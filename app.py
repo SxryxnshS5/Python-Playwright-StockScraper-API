@@ -12,11 +12,13 @@ def scrape_stock_data():
         with sync_playwright() as p:
             browser = p.chromium.launch(headless=True)
             page = browser.new_page()
-            page.goto("https://portal.tradebrains.in/index/MIDCAP50/heatmap")
+            
+            # Increase timeout for page.goto to 90 seconds (90000 ms)
+            page.goto("https://portal.tradebrains.in/index/MIDCAP50/heatmap", timeout=90000)
 
-            # Wait for elements to load
-            page.wait_for_selector("a[target='_self']", timeout=15000)  # Timeout in milliseconds
-            time.sleep(5)  # Additional wait time for dynamic content
+            # Increase timeout for selector to 60 seconds (60000 ms)
+            page.wait_for_selector("a[target='_self']", timeout=60000)  # Timeout in milliseconds
+            time.sleep(10)  # Additional wait time for dynamic content
             
             # Fetch the page content
             html = page.content()
