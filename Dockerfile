@@ -18,7 +18,7 @@ RUN pip install --upgrade pip
 RUN pip install -r requirements.txt
 
 # Install all necessary Playwright dependencies (includes Chromium)
-RUN python -m playwright install
+RUN python -m playwright install --with-deps
 
 # Expose port for the Flask app
 EXPOSE 5000
