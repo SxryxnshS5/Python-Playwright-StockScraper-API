@@ -1,5 +1,7 @@
 # Flask Stock Data Scraper API
 
+**Note:** The API takes approximately 3-4 minutes to return the CSV data due to the use of a free-tier deployment on Render and the time required for headless browsers to fully load and render the source website during scraping. <br>
+
 This project provides a RESTful API to scrape stock data and return it as a CSV file. The application is built with Flask, Playwright, and BeautifulSoup. It is deployed on [Render](https://render.com) and containerized using Docker.
 
 ⚠️ **This project is for educational purposes only.**
