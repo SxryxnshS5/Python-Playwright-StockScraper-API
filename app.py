@@ -162,6 +162,7 @@ def get_stocks_csv(symbol):
     print(f"URL for scraping: {url}")
 
     try:
+        Response("Scraping has begun and may take 2-4 minutes to complete. The page will continue loading until the data is fully scraped, after which a dialog box will appear for saving the scraped data.")
         stock_data = scrape_stock_data(url)
         filename = f"{symbol.lower()}_stock_data.csv"
         print(f"Generating CSV for symbol: {symbol}")
@@ -173,7 +174,13 @@ def get_stocks_csv(symbol):
 @app.route('/')
 def index():
     print("Index route accessed.")
-    return Response("Welcome! Use the '/api/<symbol>' endpoint to get stock data for supported symbols.")
+    return Response(
+        "Welcome! Use the '/api/<symbol>' endpoint to get stock data for supported symbols. "
+        "Please note: Scraping might take 2-4 minutes. The page will load until the data is scraped, "
+        "after which a dialog box will appear to save the scraped data.",
+        mimetype='text/plain'
+    )
+
 
 if __name__ == '__main__':
     print("Starting Flask application...")
