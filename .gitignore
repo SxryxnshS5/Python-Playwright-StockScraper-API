@@ -95,3 +95,6 @@ Desktop.ini
 # Other
 *.pem
 *.key
+
+backup.py
+test.py
