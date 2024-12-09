@@ -1,4 +1,4 @@
-name: Trigger Scraper and Save CSV
+name: Trigger Scraper for Multiple Symbols and Save CSVs
 
 on:
   schedule:
@@ -16,22 +16,36 @@ jobs:
     - name: Create "Scraped data" Directory
       run: mkdir -p "Scraped data"
 
-    - name: Trigger Scraper Endpoint and Download CSV with Timeout
-      run: |
-        echo "Triggering the scraper API and waiting for the CSV..."
-        curl --retry 5 --retry-delay 60 --max-time 600 -o "Scraped data/nifty_stock_data.csv" https://python-scraper-api-r1uj.onrender.com/api/NIFTY
+    - name: Define Symbols to Scrape
+      id: symbols
+      run: echo "SYMBOLS=NIFTY NIFTY500 MIDCAP50 BANKNIFTY NIFTYIT" >> $GITHUB_ENV
 
-    - name: Verify CSV File
+    - name: Trigger Scraper for Each Symbol and Download CSVs
       run: |
-        if [ ! -f "Scraped data/nifty_stock_data.csv" ]; then
-          echo "CSV file not found! Scraper might have failed."
-          exit 1
-        fi
+        for symbol in $SYMBOLS; do
+          echo "Scraping data for $symbol..."
+          output_file="Scraped data/${symbol}_stock_data.csv"
+          curl --retry 5 --retry-delay 60 --max-time 600 -o "$output_file" "https://python-scraper-api-r1uj.onrender.com/api/$symbol"
+          if [ $? -ne 0 ]; then
+            echo "Failed to scrape data for $symbol"
+            exit 1
+          fi
+        done
 
-    - name: Commit and Push Updated CSV
+    - name: Verify CSV Files
+      run: |
+        for symbol in $SYMBOLS; do
+          output_file="Scraped data/${symbol}_stock_data.csv"
+          if [ ! -f "$output_file" ]; then
+            echo "CSV file for $symbol not found! Scraper might have failed."
+            exit 1
+          fi
+        done
+
+    - name: Commit and Push Updated CSVs
       run: |
         git config --local user.name "github-actions"
         git config --local user.email "github-actions@github.com"
-        git add "Scraped data/nifty_stock_data.csv"
-        git commit -m "Automated update of NIFTY stock data"
+        git add "Scraped data/*.csv"
+        git commit -m "Automated update of stock data for symbols: $SYMBOLS"
         git push
