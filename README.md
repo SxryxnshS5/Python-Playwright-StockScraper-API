@@ -163,6 +163,14 @@ This application is deployed on [Render](https://render.com). The Docker image i
 
 ---
 
+## 🤝 Contributing
+
+We’d love your help! Check out our [Contributing Guide](CONTRIBUTING.md) to get started. If you have questions or want to brainstorm ideas, visit the [Discussions](https://github.com/yourusername/repo/discussions) page.
+
+**Let’s build this together!** 🚀
+
+---
+
 ## License
 
 MIT License. This project is for educational purposes only.
