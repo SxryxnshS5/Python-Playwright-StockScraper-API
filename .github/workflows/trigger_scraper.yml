@@ -1,0 +1,29 @@
+name: Trigger Scraper and Save CSV
+
+on:
+  schedule:
+    - cron: '0 0 * * *'  # Runs at midnight UTC every day
+  workflow_dispatch:  # Allows manual triggering of the workflow
+
+jobs:
+  trigger_scraper:
+    runs-on: ubuntu-latest
+
+    steps:
+    - name: Checkout Repository
+      uses: actions/checkout@v4
+
+    - name: Create "Scraped data" Directory
+      run: mkdir -p "Scraped data"
+
+    - name: Trigger Scraper Endpoint and Download CSV
+      run: |
+        curl -o "Scraped data/nifty_stock_data.csv" https://python-scraper-api-r1uj.onrender.com/api/NIFTY
+
+    - name: Commit and Push Updated CSV
+      run: |
+        git config --local user.name "github-actions"
+        git config --local user.email "github-actions@github.com"
+        git add "Scraped data/nifty_stock_data.csv"
+        git commit -m "Automated update of NIFTY stock data"
+        git push
