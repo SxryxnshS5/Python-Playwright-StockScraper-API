@@ -16,9 +16,17 @@ jobs:
     - name: Create "Scraped data" Directory
       run: mkdir -p "Scraped data"
 
-    - name: Trigger Scraper Endpoint and Download CSV
+    - name: Trigger Scraper Endpoint and Download CSV with Timeout
       run: |
-        curl -o "Scraped data/nifty_stock_data.csv" https://python-scraper-api-r1uj.onrender.com/api/NIFTY
+        echo "Triggering the scraper API and waiting for the CSV..."
+        curl --retry 5 --retry-delay 60 --max-time 600 -o "Scraped data/nifty_stock_data.csv" https://python-scraper-api-r1uj.onrender.com/api/NIFTY
+
+    - name: Verify CSV File
+      run: |
+        if [ ! -f "Scraped data/nifty_stock_data.csv" ]; then
+          echo "CSV file not found! Scraper might have failed."
+          exit 1
+        fi
 
     - name: Commit and Push Updated CSV
       run: |
