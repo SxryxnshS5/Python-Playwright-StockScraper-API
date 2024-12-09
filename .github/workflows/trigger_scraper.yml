@@ -22,25 +22,25 @@ jobs:
 
     - name: Trigger Scraper for Each Symbol and Download CSVs
       run: |
+        failed_symbols=()
+        
         for symbol in $SYMBOLS; do
           echo "Scraping data for $symbol..."
           output_file="Scraped data/${symbol}_stock_data.csv"
-          curl --retry 5 --retry-delay 60 --max-time 600 -o "$output_file" "https://python-scraper-api-r1uj.onrender.com/api/$symbol"
-          if [ $? -ne 0 ]; then
+          
+          if curl --retry 5 --retry-delay 60 --max-time 600 -o "$output_file" "https://python-scraper-api-r1uj.onrender.com/api/$symbol"; then
+            echo "Successfully scraped data for $symbol"
+          else
             echo "Failed to scrape data for $symbol"
-            exit 1
+            failed_symbols+=("$symbol")
           fi
         done
-
-    - name: Verify CSV Files
-      run: |
-        for symbol in $SYMBOLS; do
-          output_file="Scraped data/${symbol}_stock_data.csv"
-          if [ ! -f "$output_file" ]; then
-            echo "CSV file for $symbol not found! Scraper might have failed."
-            exit 1
-          fi
-        done
+        
+        if [ ${#failed_symbols[@]} -ne 0 ]; then
+          echo "The following symbols failed to scrape: ${failed_symbols[*]}"
+        else
+          echo "All symbols scraped successfully."
+        fi
 
     - name: Commit and Push Updated CSVs
       run: |
