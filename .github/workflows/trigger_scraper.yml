@@ -2,8 +2,9 @@ name: Trigger Scraper for Multiple Symbols and Save CSVs
 
 on:
   schedule:
-    - cron: '0 0 * * *'  # Runs at midnight UTC every day
-  workflow_dispatch:  # Allows manual triggering of the workflow
+    - cron: '30 19 * * *'  # Runs at 1 AM IST (7:30 PM UTC)
+    - cron: '30 7 * * *'   # Runs at 1 PM IST (7:30 AM UTC)
+  workflow_dispatch:        # Allows manual triggering of the workflow
 
 jobs:
   trigger_scraper:
@@ -18,34 +19,40 @@ jobs:
 
     - name: Define Symbols to Scrape
       id: symbols
-      run: echo "SYMBOLS=NIFTY NIFTY500 MIDCAP50 BANKNIFTY NIFTYIT" >> $GITHUB_ENV
+      run: echo "SYMBOLS=NIFTY NIFTYIT NIFTYJR BANKNIFTY NIFTYMIDCAP NIFTY500 MIDCAP50 NIFTY100 NIFTYFMCG NIFTYPSU NIFTYMNC NIFTYSERVICE NIFTYENERGY NIFTYPHARMA NIFTYINFRAST NIFTYREALTY NIFTYPSUBANK NIFTYSMALL NIFTYPSE NIFTYCONSUMP NIFTYAUTO NIFTYMETAL NIFTY200 NIFTYMEDIA NIFTYCDTY NIFTYFINANCE NIFTYCPSE NIFTYPTBNK NIFTYMIDCAP150 NIFTYSMALLCAP250 NIFTYSMALLCAP50 NCONSDUR NOILGAS NIFTYHEALTH NIFTYMICRO250 NIFTYMFG NIFTYMIDSELECT" >> $GITHUB_ENV
 
     - name: Trigger Scraper for Each Symbol and Download CSVs
       run: |
+        failed_symbols=()
+        
         for symbol in $SYMBOLS; do
           echo "Scraping data for $symbol..."
           output_file="Scraped data/${symbol}_stock_data.csv"
-          curl --retry 5 --retry-delay 60 --max-time 600 -o "$output_file" "https://python-scraper-api-r1uj.onrender.com/api/$symbol"
-          if [ $? -ne 0 ]; then
+          
+          if curl --retry 5 --retry-delay 60 --max-time 600 -o "$output_file" "https://python-scraper-api-r1uj.onrender.com/api/$symbol"; then
+            echo "Successfully scraped data for $symbol"
+          else
             echo "Failed to scrape data for $symbol"
-            exit 1
+            failed_symbols+=("$symbol")
           fi
         done
-
-    - name: Verify CSV Files
-      run: |
-        for symbol in $SYMBOLS; do
-          output_file="Scraped data/${symbol}_stock_data.csv"
-          if [ ! -f "$output_file" ]; then
-            echo "CSV file for $symbol not found! Scraper might have failed."
-            exit 1
-          fi
-        done
+        
+        if [ ${#failed_symbols[@]} -ne 0 ]; then
+          echo "The following symbols failed to scrape: ${failed_symbols[*]}"
+        else
+          echo "All symbols scraped successfully."
+        fi
 
     - name: Commit and Push Updated CSVs
       run: |
         git config --local user.name "github-actions"
         git config --local user.email "github-actions@github.com"
         git add "Scraped data/*.csv"
-        git commit -m "Automated update of stock data for symbols: $SYMBOLS"
-        git push
+
+        # Check if there are any changes to commit
+        if git diff --cached --quiet; then
+          echo "No changes to commit."
+        else
+          git commit -m "Automated update of stock data for symbols: $SYMBOLS"
+          git push
+        fi
