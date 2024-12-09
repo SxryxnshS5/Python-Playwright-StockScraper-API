@@ -95,7 +95,6 @@ symbol_url_map = {
     "NIFTY500": "NIFTY500",
     "MIDCAP50": "MIDCAP50",
     "NIFTY100": "NIFTY100",
-    "MIDCAP200": "MIDCAP200",
     "NIFTYFMCG": "NIFTYFMCG",
     "NIFTYPSU": "NIFTYPSU",
     "NIFTYMNC": "NIFTYMNC",
@@ -114,11 +113,7 @@ symbol_url_map = {
     "NIFTYMEDIA": "NIFTYMEDIA",
     "NIFTYCDTY": "NIFTYCDTY",
     "NIFTYFINANCE": "NIFTYFINANCE",
-    "SHARIAH500": "SHARIAH500",
     "NIFTYCPSE": "NIFTYCPSE",
-    "NIFTYTATA": "NIFTYTATA",
-    "NIFTYADITYA": "NIFTYADITYA",
-    "NIFTYMAH": "NIFTYMAH",
     "NIFTYPTBNK": "NIFTYPTBNK",
     "NIFTYMIDCAP150": "NIFTYMIDCAP150",
     "NIFTYSMALLCAP250": "NIFTYSMALLCAP250",
@@ -129,30 +124,9 @@ symbol_url_map = {
     "NIFTYMICRO250": "NIFTYMICRO250",
     "NIFTYMFG": "NIFTYMFG",
     "NIFTYMIDSELECT": "NIFTYMIDSELECT",
-    "NIFTYDIGITAL": "NIFTYDIGITAL",
-    "NIFTYHOUSING": "NIFTYHOUSING",
-    "NIFTYTRANSLOG": "NIFTYTRANSLOG",
-    "NIFTYINDEFENCE": "NIFTYINDEFENCE",
-    "NFTSMLCAP250Q50": "NFTSMLCAP250Q50",
-    "NFTSML250MOMQ100": "NFTSML250MOMQ100",
-    "Ny500MUL50:30:20": "Ny500MUL50:30:20",
-    "Ny500MULI50:30:20": "Ny500MULI50:30:20",
-    "NYMIDSML400MQ100": "NYMIDSML400MQ100",
-    "EV&NEWAGE": "EV&NEWAGE",
-    "NIF500LGMIDSML": "NIF500LGMIDSML",
-    "NFT200VAL30": "NFT200VAL30",
-    "NFTTOURISM": "NFTTOURISM",
-    "NFT10EQUAL": "NFT10EQUAL",
-    "NFT500MOM50": "NFT500MOM50",
-    "NFTRURAL": "NFTRURAL",
-    "NIFTYIPO": "NIFTYIPO",
-    "NFT500EQUAL": "NFT500EQUAL",
-    "NFT500MOQ50": "NFT500MOQ50",
-    "NIFTYCM": "NIFTYCM",
     "MIDCAP50": "MIDCAP50"
 }
 
-# Ensure "Scraped data" directory exists
 SCRAPED_DATA_DIR = "Scraped data"
 os.makedirs(SCRAPED_DATA_DIR, exist_ok=True)
 
@@ -167,12 +141,10 @@ def get_stocks_csv(symbol):
     filename = f"{symbol.lower()}_stock_data.csv"
     file_path = os.path.join(SCRAPED_DATA_DIR, filename)
 
-    # Check if the CSV file already exists
     if os.path.exists(file_path):
         print(f"CSV for symbol '{symbol}' already exists. Returning existing file.")
         return send_file(file_path, mimetype='text/csv', as_attachment=True, download_name=filename)
 
-    # If the file does not exist, proceed with scraping
     url = f"https://portal.tradebrains.in/index/{symbol_url_map[symbol]}/heatmap"
     print(f"URL for scraping: {url}")
 
@@ -180,7 +152,6 @@ def get_stocks_csv(symbol):
         Response("Scraping has begun and may take 2-4 minutes to complete. The page will continue loading until the data is fully scraped, after which a dialog box will appear for saving the scraped data.")
         stock_data = scrape_stock_data(url)
 
-        # Save the scraped data to a CSV file
         with open(file_path, 'w', newline='', encoding='utf-8') as csv_file:
             writer = csv.writer(csv_file)
             writer.writerow(['name', 'price', 'change'])
