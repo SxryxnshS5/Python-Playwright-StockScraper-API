@@ -1,9 +1,10 @@
-from flask import Flask, Response
+from flask import Flask, Response, send_file
 from playwright.sync_api import sync_playwright
 from bs4 import BeautifulSoup
 import io
 import csv
 import time
+import os
 
 app = Flask(__name__)
 
@@ -151,22 +152,44 @@ symbol_url_map = {
     "MIDCAP50": "MIDCAP50"
 }
 
+# Ensure "Scraped data" directory exists
+SCRAPED_DATA_DIR = "Scraped data"
+os.makedirs(SCRAPED_DATA_DIR, exist_ok=True)
+
 @app.route('/api/<symbol>', methods=['GET'])
 def get_stocks_csv(symbol):
     print(f"Received request for symbol: {symbol}")
+
     if symbol not in symbol_url_map:
         print(f"Symbol '{symbol}' not supported.")
         return Response(f"Error: Symbol '{symbol}' not supported.", status=400, mimetype='text/plain')
 
+    filename = f"{symbol.lower()}_stock_data.csv"
+    file_path = os.path.join(SCRAPED_DATA_DIR, filename)
+
+    # Check if the CSV file already exists
+    if os.path.exists(file_path):
+        print(f"CSV for symbol '{symbol}' already exists. Returning existing file.")
+        return send_file(file_path, mimetype='text/csv', as_attachment=True, download_name=filename)
+
+    # If the file does not exist, proceed with scraping
     url = f"https://portal.tradebrains.in/index/{symbol_url_map[symbol]}/heatmap"
     print(f"URL for scraping: {url}")
 
     try:
         Response("Scraping has begun and may take 2-4 minutes to complete. The page will continue loading until the data is fully scraped, after which a dialog box will appear for saving the scraped data.")
         stock_data = scrape_stock_data(url)
-        filename = f"{symbol.lower()}_stock_data.csv"
-        print(f"Generating CSV for symbol: {symbol}")
-        return generate_csv_response(stock_data, filename)
+
+        # Save the scraped data to a CSV file
+        with open(file_path, 'w', newline='', encoding='utf-8') as csv_file:
+            writer = csv.writer(csv_file)
+            writer.writerow(['name', 'price', 'change'])
+            for stock in stock_data:
+                writer.writerow([stock['name'], stock['price'], stock['change']])
+
+        print(f"CSV for symbol '{symbol}' scraped and saved successfully.")
+        return send_file(file_path, mimetype='text/csv', as_attachment=True, download_name=filename)
+
     except Exception as e:
         print(f"Error in get_stocks_csv: {e}")
         return Response(f"Error: {str(e)}", status=500, mimetype='text/plain')
