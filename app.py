@@ -133,6 +133,26 @@ os.makedirs(SCRAPED_DATA_DIR, exist_ok=True)
 @app.route('/api/<symbol>', methods=['GET'])
 def get_stocks_csv(symbol):
     print(f"Received request for symbol: {symbol}")
+    if symbol not in symbol_url_map:
+        print(f"Symbol '{symbol}' not supported.")
+        return Response(f"Error: Symbol '{symbol}' not supported.", status=400, mimetype='text/plain')
+
+    url = f"https://portal.tradebrains.in/index/{symbol_url_map[symbol]}/heatmap"
+    print(f"URL for scraping: {url}")
+
+    try:
+        Response("Scraping has begun and may take 2-4 minutes to complete. The page will continue loading until the data is fully scraped, after which a dialog box will appear for saving the scraped data.")
+        stock_data = scrape_stock_data(url)
+        filename = f"{symbol.lower()}_stock_data.csv"
+        print(f"Generating CSV for symbol: {symbol}")
+        return generate_csv_response(stock_data, filename)
+    except Exception as e:
+        print(f"Error in get_stocks_csv: {e}")
+        return Response(f"Error: {str(e)}", status=500, mimetype='text/plain')
+    
+@app.route('/api-asd/<symbol>', methods=['GET'])
+def get_asd_stocks_cv(symbol):
+    print(f"Received request for symbol: {symbol}")
 
     if symbol not in symbol_url_map:
         print(f"Symbol '{symbol}' not supported.")
@@ -144,26 +164,8 @@ def get_stocks_csv(symbol):
     if os.path.exists(file_path):
         print(f"CSV for symbol '{symbol}' already exists. Returning existing file.")
         return send_file(file_path, mimetype='text/csv', as_attachment=True, download_name=filename)
+    else: return Response(f"No existing CSV data available for '{symbol}'. ")
 
-    url = f"https://portal.tradebrains.in/index/{symbol_url_map[symbol]}/heatmap"
-    print(f"URL for scraping: {url}")
-
-    try:
-        Response("Scraping has begun and may take 2-4 minutes to complete. The page will continue loading until the data is fully scraped, after which a dialog box will appear for saving the scraped data.")
-        stock_data = scrape_stock_data(url)
-
-        with open(file_path, 'w', newline='', encoding='utf-8') as csv_file:
-            writer = csv.writer(csv_file)
-            writer.writerow(['name', 'price', 'change'])
-            for stock in stock_data:
-                writer.writerow([stock['name'], stock['price'], stock['change']])
-
-        print(f"CSV for symbol '{symbol}' scraped and saved successfully.")
-        return send_file(file_path, mimetype='text/csv', as_attachment=True, download_name=filename)
-
-    except Exception as e:
-        print(f"Error in get_stocks_csv: {e}")
-        return Response(f"Error: {str(e)}", status=500, mimetype='text/plain')
 
 @app.route('/')
 def index():
