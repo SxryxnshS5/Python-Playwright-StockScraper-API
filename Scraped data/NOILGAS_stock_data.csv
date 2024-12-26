@@ -1,3 +1,16 @@
-Error: Page.goto: Page crashed
-Call log:
-  - navigating to "https://portal.tradebrains.in/index/NOILGAS/heatmap", waiting until "load"
+name,price,change
+HINDPETRO,419.3,1.56
+BPCL,295.6,1.23
+PETRONET,344.75,1.17
+GUJGASLTD,509.0,0.62
+ONGC,240.25,0.54
+OIL,427.05,0.34
+ATGL,672.0,0.16
+GSPL,364.85,0.04
+GAIL,197.63,-0.22
+IOC,137.85,-0.3
+RELIANCE,1216.55,-0.51
+CASTROLIND,196.78,-0.76
+MGL,1238.95,-0.77
+AEGISLOG,804.65,-1.1
+IGL,390.5,-1.72

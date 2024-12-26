@@ -1,3 +1,12 @@
-Error: Page.goto: Page crashed
-Call log:
-  - navigating to "https://portal.tradebrains.in/index/NIFTYCPSE/heatmap", waiting until "load"
+name,price,change
+BEL,295.2,0.94
+COALINDIA,386.6,0.55
+ONGC,240.25,0.54
+OIL,427.05,0.34
+POWERGRID,310.3,0.06
+NHPC,82.04,-0.01
+COCHINSHIP,1465.8,-0.18
+NTPC,334.65,-0.19
+NLCINDIA,239.45,-0.73
+SJVN,108.87,-0.96
+NBCC,92.07,-1.21

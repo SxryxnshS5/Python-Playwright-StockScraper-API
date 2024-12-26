@@ -1,3 +1,16 @@
-Error: Page.goto: Page crashed
-Call log:
-  - navigating to "https://portal.tradebrains.in/index/NCONSDUR/heatmap", waiting until "load"
+name,price,change
+AMBER,7867.7,8.52
+RAJESHEXPO,235.81,3.01
+BLUESTARCO,2039.2,2.82
+VOLTAS,1711.3,2.17
+KALYANKJIL,726.45,0.9
+DIXON,18038.15,0.81
+HAVELLS,1676.4,0.13
+CROMPTON,393.6,-0.32
+VGUARD,419.85,-0.42
+BATAINDIA,1350.45,-0.81
+TITAN,3323.05,-0.91
+WHIRLPOOL,1871.5,-1.14
+CENTURYPLY,756.55,-1.28
+KAJARIACER,1110.15,-1.71
+CERA,7208.55,-1.84

@@ -1,3 +1,11 @@
-Error: Page.goto: Page crashed
-Call log:
-  - navigating to "https://portal.tradebrains.in/index/NIFTYPTBNK/heatmap", waiting until "load"
+name,price,change
+FEDERALBNK,197.68,0.49
+KOTAKBANK,1752.8,0.21
+ICICIBANK,1297.35,0.01
+AXISBANK,1076.7,-0.2
+INDUSINDBK,931.95,-0.36
+HDFCBANK,1790.75,-0.41
+RBLBANK,162.41,-0.55
+CUB,173.54,-0.6
+IDFCFIRSTB,61.75,-0.87
+BANDHANBNK,161.47,-3.04

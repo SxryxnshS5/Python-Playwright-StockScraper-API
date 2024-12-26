@@ -1,3 +1,11 @@
-Error: Page.goto: Page crashed
-Call log:
-  - navigating to "https://portal.tradebrains.in/index/NIFTYREALTY/heatmap", waiting until "load"
+name,price,change
+PHOENIXLTD,1730.0,1.97
+OBEROIRLTY,2322.65,1.4
+LODHA,1414.05,0.78
+PRESTIGE,1751.8,-0.01
+GODREJPROP,2855.75,-0.3
+MAHLIFE,468.4,-0.33
+DLF,838.7,-0.36
+SOBHA,1593.75,-0.56
+BRIGADE,1246.2,-1.47
+RAYMOND,1740.25,-2.24

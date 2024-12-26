@@ -1,3 +1,21 @@
-Error: Page.goto: Page crashed
-Call log:
-  - navigating to "https://portal.tradebrains.in/index/NIFTYPSE/heatmap", waiting until "load"
+name,price,change
+PFC,463.25,2.67
+RECLTD,519.1,2.31
+HINDPETRO,419.3,1.56
+BPCL,295.6,1.23
+BHEL,241.75,1.0
+NMDC,214.45,0.95
+BEL,295.2,0.94
+COALINDIA,386.6,0.55
+ONGC,240.25,0.54
+OIL,427.05,0.34
+HAL,4229.2,0.31
+POWERGRID,310.3,0.06
+CONCOR,776.35,0.06
+NHPC,82.04,-0.01
+NTPC,334.65,-0.19
+GAIL,197.63,-0.22
+IOC,137.85,-0.3
+IRFC,146.89,-0.66
+IRCTC,782.4,-0.81
+SAIL,117.59,-1.23

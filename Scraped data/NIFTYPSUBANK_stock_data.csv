@@ -1,3 +1,13 @@
-Error: Page.goto: Page crashed
-Call log:
-  - navigating to "https://portal.tradebrains.in/index/NIFTYPSUBANK/heatmap", waiting until "load"
+name,price,change
+BANKINDIA,103.17,0.8
+UNIONBANK,119.05,0.75
+BANKBARODA,246.68,0.71
+PNB,102.16,0.51
+INDIANB,543.8,0.49
+CANBK,101.03,0.48
+SBIN,812.45,0.05
+PSB,48.03,-0.21
+IOB,51.5,-0.37
+CENTRALBK,53.78,-0.83
+UCOBANK,43.26,-1.23
+MAHABANK,52.9,-1.4
