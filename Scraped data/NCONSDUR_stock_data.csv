@@ -1,16 +1,3 @@
-name,price,change
-AMBER,7249.9,4.95
-WHIRLPOOL,1893.1,2.26
-BATAINDIA,1361.5,2.05
-CROMPTON,394.85,1.1
-CENTURYPLY,766.35,0.86
-HAVELLS,1674.15,0.8
-CERA,7343.4,0.67
-VGUARD,421.6,0.09
-KAJARIACER,1129.45,-0.24
-KALYANKJIL,720.0,-0.55
-DIXON,17893.0,-0.59
-RAJESHEXPO,228.91,-0.62
-BLUESTARCO,1983.2,-1.13
-VOLTAS,1675.0,-1.21
-TITAN,3353.4,-1.28
+Error: Page.goto: Page crashed
+Call log:
+  - navigating to "https://portal.tradebrains.in/index/NCONSDUR/heatmap", waiting until "load"
