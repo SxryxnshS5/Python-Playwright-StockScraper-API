@@ -158,7 +158,7 @@ def get_asd_stocks_cv(symbol):
         print(f"Symbol '{symbol}' not supported.")
         return Response(f"Error: Symbol '{symbol}' not supported.", status=400, mimetype='text/plain')
 
-    filename = f"{symbol.lower()}_stock_data.csv"
+    filename = f"{symbol}_stock_data.csv"
     file_path = os.path.join(SCRAPED_DATA_DIR, filename)
 
     if os.path.exists(file_path):
