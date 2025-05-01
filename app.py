@@ -18,8 +18,8 @@ def scrape_stock_data(url):
             
             print(f"Navigating to URL: {url}")
             page.goto(url, timeout=180000)
-            print("Waiting for selector 'a[target=\"_self\"]'...")
-            page.wait_for_selector("a[target='_self']", timeout=60000)
+            print("Waiting for selector 'div.relative'...")
+            page.wait_for_selector("div.relative", timeout=60000)
             print("Sleeping for 10 seconds to ensure page load...")
             time.sleep(10)
             
@@ -32,19 +32,19 @@ def scrape_stock_data(url):
         print("HTML parsed with BeautifulSoup.")
 
         stock_data = []
-        for card in soup.select("a[target='_self']"):
+        for card in soup.select("div.relative[style*='padding: 5px 10px']"):
             try:
                 print("Extracting data from stock card...")
                 change_percentage = (
-                    card.select_one("p.d-flex.justify-content-end").text
+                    card.select_one("p.fs-20-16.fw-700.text-white").text
                     .strip()
                     .replace("%", "")
                     .replace("+", "")
                     .strip()
                 )
-                symbol = card.select_one("p.text-white.fs-14-12.fw-600").text.strip()
+                symbol = card.select_one("p.fs-14-12.fw-600").text.strip()
                 price = (
-                    card.select_one("p.mb-0.fs-14-12.ff-lato.text-white").text
+                    card.select_one("p.ff-lato.text-white").text
                     .strip()
                     .replace("₹", "")
                     .strip()
@@ -164,8 +164,8 @@ def get_asd_stocks_cv(symbol):
     if os.path.exists(file_path):
         print(f"CSV for symbol '{symbol}' already exists. Returning existing file.")
         return send_file(file_path, mimetype='text/csv', as_attachment=True, download_name=filename)
-    else: return Response(f"No existing CSV data available for '{symbol}'. ")
-
+    else:
+        return Response(f"No existing CSV data available for '{symbol}'. ")
 
 @app.route('/')
 def index():
@@ -176,7 +176,6 @@ def index():
         "after which a dialog box will appear to save the scraped data.",
         mimetype='text/plain'
     )
-
 
 if __name__ == '__main__':
     print("Starting Flask application...")
